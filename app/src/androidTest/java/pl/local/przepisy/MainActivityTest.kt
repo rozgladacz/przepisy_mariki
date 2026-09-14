@@ -7,6 +7,8 @@ import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.hasScrollToIndexAction
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
@@ -95,7 +97,11 @@ class MainActivityTest {
         waitForText("Przepis do edycji")
         composeRule.onNodeWithText("Przepis do edycji").performClick()
         composeRule.onNodeWithText("Edytuj").performClick()
-        composeRule.onNodeWithText("Przepis do edycji").performTextReplacement("Zmieniony przepis")
+        val titleField = hasText("Przepis do edycji") and hasSetTextAction()
+        composeRule.waitUntil(timeoutMillis = 10_000) {
+            composeRule.onAllNodes(titleField).fetchSemanticsNodes().isNotEmpty()
+        }
+        composeRule.onNode(titleField).performTextReplacement("Zmieniony przepis")
         composeRule.onNode(hasScrollAction()).performScrollToNode(hasText("Zapisz zmiany"))
         composeRule.onNodeWithText("Zapisz zmiany").performClick()
         waitForText("Zmieniony przepis")
@@ -153,7 +159,9 @@ class MainActivityTest {
         composeRule.onNodeWithText("Opis").performClick()
         composeRule.onNodeWithText("Pełny opis przepisu do ukrycia.").assertIsDisplayed()
         composeRule.onNodeWithText("Inne").performClick()
+        composeRule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Własny mnożnik"))
         composeRule.onNodeWithText("Własny mnożnik").assertIsDisplayed()
+        composeRule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("2×"))
         composeRule.onNodeWithText("2×").performClick()
         assertTextAbsent("Własny mnożnik")
         waitForText("• 4 jajka")
