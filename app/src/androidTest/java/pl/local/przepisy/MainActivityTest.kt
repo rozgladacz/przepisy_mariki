@@ -15,6 +15,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.material3.MaterialTheme
@@ -158,7 +159,7 @@ class MainActivityTest {
 
         composeRule.onNodeWithText("Opis").performClick()
         composeRule.onNodeWithText("Pełny opis przepisu do ukrycia.").assertIsDisplayed()
-        composeRule.onNodeWithText("Inne").performClick()
+        composeRule.onNodeWithText("Inne").performScrollTo().performClick()
         composeRule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Własny mnożnik"))
         composeRule.onNodeWithText("Własny mnożnik").assertIsDisplayed()
         composeRule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("2×"))
